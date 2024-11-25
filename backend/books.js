@@ -45,32 +45,36 @@ async function seedingData(){
 
 // seedingData()
 
-const newBook = {
-      "title": "To Kill a Mockingbird",
-      "author": "Harper Lee",
-      "publishedYear": 1960,
-      "genre": ["Fiction", "Historical"],
-      "language": "English",
-      "country": "United States",
-      "rating": 8.9,
-      "summary": "A powerful story of racial injustice and moral growth in a small Southern town.",
-      "coverImageUrl": "https://example.com/to_kill_a_mockingbird.jpg"
-}
+// const newBook = {
+//       "title": "To Kill a Mockingbird",
+//       "author": "Harper Lee",
+//       "publishedYear": 1960,
+//       "genre": ["Fiction", "Historical"],
+//       "language": "English",
+//       "country": "United States",
+//       "rating": 8.9,
+//       "summary": "A powerful story of racial injustice and moral growth in a small Southern town.",
+//       "coverImageUrl": "https://example.com/to_kill_a_mockingbird.jpg"
+// }
 
 async function createBook(newBook){
+    // console.log("newBook", newBook)
     try{
         const book = new Books(newBook)
-        const savedBook = await book.save()
-        return savedBook
+        // console.log("book", book)
+        book.save()
+        return book
+        
     } catch(error){
         throw error
     }
 }
 
 app.post("/books", async(req, res) => {
+    // console.log("response", res)
     try{
-        const savedBook = await createBook(req.body)
-        res.status(200).json({messgae: "Movie added successfully", book: savedBook})
+        const savedBooks = await createBook(req.body)
+        res.status(200).json({messgae: "Movie added successfully", book: savedBooks})
     } catch(error){
         res.status(500).json({error: "Failed to add book"})
     }
@@ -146,8 +150,10 @@ app.get("/books/author/:author", async(req, res) => {
 })
 
 async function deleteBooks(bookId){
+    // console.log("Id", bookId)
     try{
         const deleteBooks = await Books.findByIdAndDelete(bookId)
+        // console.log("delete", deleteBooks)
         return deleteBooks
     } catch(error){
         console.log("Error in deleting books", error)
@@ -157,7 +163,7 @@ async function deleteBooks(bookId){
 
 app.delete('/books/:bookId', async(req, res) => {
     try{
-        const deletedBooks = await deleteBooks(req.params.movieId)
+        const deletedBooks = await deleteBooks(req.params.bookId)
         if(deletedBooks){
             res.status(200).json({message: "Movie deleted successfully."})
         }
